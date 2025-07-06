@@ -28,3 +28,99 @@ model User {
   email String  @unique
   posts Post[]
 }
+
+
+// Modelos Para el Ejercicio
+
+enum Rol_usuario {
+  cliente
+  administrador
+}
+
+enum Especie_animales{
+  perrp
+  gato 
+  hamster 
+  ave 
+}
+enum Sexo_animales{
+  hembra
+  macho
+}
+
+enum Tipo_AtencionMedica {
+  consulta 
+  vacunacion
+}
+enum Veterinario_asignado{
+ DR_ANDRES_ERRERA @map("Dr Andres Errera")
+ DR_CLARA_NUÑEZ @map("Dr Clara Nuñez")
+ DRA_SOFIA_NENA @map("Dra Sofia Mena")
+ DR_LUIS_TORRES @map("Dr Luis Torres")
+}
+
+enum Vacunas {
+  ANTI_RABIA            @map("Anti-Rabia")
+  ANTI_PARVOVIRUS       @map("Anti-Parvovirus")
+  ANTI_LEUCEMIA_FELINA  @map("Anti-Leucemia felina")
+  ANTI_TIFOIDEA         @map("Anti-Tifoidea")
+  ANTI_TULAREMIA        @map("Anti-Tularemia")
+  ANTI_VIRUELA_AVIAR    @map("Anti-Viruela aviar")
+  ANTI_NEWCASTLE        @map("Anti-Newcastle")
+}
+
+model Usuario {
+  id       Int      @id @default(autoincrement())
+  nombre   String
+  email    String   @unique
+  password String
+  rol      Rol_usuario @default(cliente)
+  solicitudes Solicitud[]
+}
+
+model Animal{
+
+  id Int @id @default(autoincrement())
+  nombre String
+  especie Especie_animales
+  fecha_nacido DateTime
+  sexo  Sexo_animales
+  paraAdopcion Boolean @default(true)
+  atenciones AtencionMedica[]
+  solicitudes Solicitud[]
+}
+
+
+model AtencionMedica {
+  id Int @id @default(autoincrement())
+  tipo Tipo_AtencionMedica
+  animal   Animal    @relation(fields: [animalId], references: [id])
+  animalId Int
+  veterinario Veterinario_asignado 
+  fecha DateTime @default(now())
+  
+  consulta  AtencionMedica_consulta?
+  vacunacion  AtencionMedica_vacunacion?
+}
+
+model AtencionMedica_consulta{
+  atencionMedica AtencionMedica @relation(fields: [atencionMedicaId], references: [id])
+  atencionMedicaId Int @unique
+  diagnostico String 
+  tratamiento String
+}
+
+model AtencionMedica_vacunacion{
+  atencionMedica AtencionMedica @relation(fields: [atencionMedicaId], references: [id])
+  atencionMedicaId Int @unique
+  vacuna Vacunas
+}
+
+model Solicitud{
+  id Int @id @default(autoincrement())
+  animal Animal @relation(fields: [animal_id], references: [id])
+  animal_id Int
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId Int
+  fecha DateTime @default(now())
+}
