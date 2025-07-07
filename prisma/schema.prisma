@@ -109,7 +109,7 @@ model Solicitud{
   usuario Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId Int
   fecha DateTime @default(now())
-  estado Estado_solicitud
+  estado Estado_solicitud @default(espera)
 }
 
 model Notificacion{
