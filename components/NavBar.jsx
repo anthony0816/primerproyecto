@@ -6,7 +6,7 @@ export default function NavBar() {
     <nav className={styles.navbar}>
       {/* Logo */}
       <Link href="/" className={styles.logo}>
-        MiWeb
+        Clinica Veterinaria
       </Link>
 
       {/* Menú Hamburguesa (solo móvil) */}
@@ -23,10 +23,11 @@ export default function NavBar() {
 
       {/* Links de navegación */}
       <div className={styles.linksContainer}>
-        {["Inicio", "Productos", "Servicios", "about"].map((item) => {
+        {["Disponibles Para Adopcion", "Productos", "Servicios", "About us"].map((item) => {
           const getHref = (item) => {
             switch(item) { 
-              case "about": return "/about";
+              case "About us": return "/about";
+              case "Disponibles Para Adopcion": return "/adopcion"
               default: return "#";
             }
           };

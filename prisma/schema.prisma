@@ -3,32 +3,12 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../app/generated/prisma"
 }
 
 datasource db {
   provider = "sqlite"
   url      = env("sqlite_prisma_db")
 }
-
-
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
-  createdAt DateTime @default(now())
-}
-
-model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
-  posts Post[]
-}
-
 
 // Modelos Para el Ejercicio
 
@@ -38,7 +18,7 @@ enum Rol_usuario {
 }
 
 enum Especie_animales{
-  perrp
+  perro
   gato 
   hamster 
   ave 
@@ -68,6 +48,11 @@ enum Vacunas {
   ANTI_VIRUELA_AVIAR    @map("Anti-Viruela aviar")
   ANTI_NEWCASTLE        @map("Anti-Newcastle")
 }
+enum Estado_solicitud{
+  aceptado
+  espera
+  denegado
+}
 
 model Usuario {
   id       Int      @id @default(autoincrement())
@@ -76,6 +61,7 @@ model Usuario {
   password String
   rol      Rol_usuario @default(cliente)
   solicitudes Solicitud[]
+  notificaciones Notificacion[]
 }
 
 model Animal{
@@ -123,4 +109,12 @@ model Solicitud{
   usuario Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId Int
   fecha DateTime @default(now())
+  estado Estado_solicitud
+}
+
+model Notificacion{
+  id Int @id @default(autoincrement())
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId Int 
+  mensaje String
 }
