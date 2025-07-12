@@ -1,21 +1,30 @@
 "use client";
 import ModalAtenciones from "./ModalAtenciones";
+import ModalSolicitudes from "./ModalSolicitudes";
 import { useRef } from "react";
+
 export default function TablaAnimales({ animales }) {
   const modalAtencionesRef = useRef(null);
+  const modalSolicitudesRef = useRef(null)
 
   function handleAtenciones(animalId) {
     if (modalAtencionesRef.current) {
       modalAtencionesRef.current.open(animalId);
     }
   }
-  function handleSolicitudes() {
-    console.log("manejando solicitudes ");
+  function handleSolicitudes(animalId) {
+    if(modalSolicitudesRef.current){
+      modalSolicitudesRef.current.fetchSolicitudes(animalId)
+    } 
   }
+
   return (
     <>
       {/* //Modal expandir atenciones medicas */}
-      <ModalAtenciones ref={modalAtencionesRef} />
+      <ModalAtenciones ref={modalAtencionesRef}/>
+
+      {/* //Modal expandir solicitudes de adopcion */}
+      <ModalSolicitudes ref={modalSolicitudesRef}/>
 
       <div className="mx-auto min-w-[700px] max-w-[1300px]">
         <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200 bg-white">
@@ -110,7 +119,7 @@ export default function TablaAnimales({ animales }) {
                         {
                           <li
                             className="bg-yellow-50 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
-                            onClick={() => handleSolicitudes()}
+                            onClick={() => handleSolicitudes(animal.id)}
                           >
                             ➕ Ver
                           </li>

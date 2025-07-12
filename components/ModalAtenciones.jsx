@@ -19,7 +19,7 @@ const ModalAtenciones = forwardRef((props, ref) => {
 
   const fetchAtenciones = async (id) => {
     try {
-      const response = await fetch("http://192.168.1.104:3000/api/atenciones/"+id)
+      const response = await fetch("http://localhost:3000/api/atenciones/"+id)
       const atenciones = await response.json()
       console.log("Atenciones",atenciones)
       setAtenciones(atenciones);
