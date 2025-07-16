@@ -1,26 +1,15 @@
 "use client";
-import { forwardRef, useImperativeHandle, useState, useEffect } from "react";
+import { forwardRef, useImperativeHandle, useState } from "react";
 const ModalSolicitudes = forwardRef((props, ref) => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [id_animal, setId_animal] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loadingMap, setLoadingMap] = useState({});
 
   useImperativeHandle(ref, () => ({
     fetchSolicitudes: getSolicitudesFromBackend,
   }));
-
-  useEffect(() => {
-    if (isOpen) {
-      console.log("recargando el componente");
-      if (id_animal == null) {
-        console.log("EL ID DEL ANIMAL ESTA VACIO");
-        return;
-      }
-      getSolicitudesFromBackend(id_animal);
-    }
-  }, [refresh]);
 
   async function getSolicitudesFromBackend(id) {
     setId_animal(id);
@@ -28,25 +17,7 @@ const ModalSolicitudes = forwardRef((props, ref) => {
     const data = await response.json();
     console.log("solicitudes", data);
     setSolicitudes(data);
-    setLoading(false)
     setIsOpen(true);
-  }
-
-  async function handleAceptar(solicitud) {
-    setLoading(true)
-    await setEstadoSolicitud(solicitud, "aceptado");
-    
-  }
-
-  async function handleDenegar(solicitud) {
-    setLoading(true)
-    await setEstadoSolicitud(solicitud, "denegado");
-    
-  }
-
-  async function handleModificar(solicitud) {
-    setLoading(true)
-    await setEstadoSolicitud(solicitud, "espera");
   }
 
   async function setEstadoSolicitud(solicitud, estado) {
@@ -66,6 +37,27 @@ const ModalSolicitudes = forwardRef((props, ref) => {
     const data = await response.json();
     console.log("Response from Update", data);
     setRefresh(!refresh);
+  }
+
+  async function handleAceptar(solicitud) {
+    setLoadingMap((prev) => ({ ...prev, [solicitud.id]: true }));
+    await setEstadoSolicitud(solicitud, "aceptado");
+    await getSolicitudesFromBackend(id_animal);
+    setLoadingMap((prev) => ({ ...prev, [solicitud.id]: false }));
+  }
+
+  async function handleDenegar(solicitud) {
+    setLoadingMap((prev) => ({ ...prev, [solicitud.id]: true }));
+    await setEstadoSolicitud(solicitud, "denegado");
+    await getSolicitudesFromBackend(id_animal);
+    setLoadingMap((prev) => ({ ...prev, [solicitud.id]: false }));
+  }
+
+  async function handleModificar(solicitud) {
+    setLoadingMap((prev) => ({ ...prev, [solicitud.id]: true }));
+    await setEstadoSolicitud(solicitud, "espera");
+    await getSolicitudesFromBackend(id_animal);
+    setLoadingMap((prev) => ({ ...prev, [solicitud.id]: false }));
   }
 
   if (isOpen == false) return null;
@@ -129,7 +121,7 @@ const ModalSolicitudes = forwardRef((props, ref) => {
                     </span>
                   </td>
                   <td>
-                    {loading ? (
+                    {loadingMap[solicitud.id] ? (
                       <div>Procesando...</div>
                     ) : solicitud.estado === "espera" ? (
                       <div className="flex justify-around w-40">
