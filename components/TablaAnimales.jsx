@@ -26,7 +26,7 @@ export default function TablaAnimales({ animales }) {
       {/* //Modal expandir solicitudes de adopcion */}
       <ModalSolicitudes ref={modalSolicitudesRef}/>
 
-      <div className="mx-auto min-w-[700px] max-w-[1300px]">
+      <div className="mx-auto min-w-[700px] max-w-[1300px] TablaAnimales">
         <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200 bg-white">
           <h2 className="text-3xl font-extrabold mb-8 text-center animate-fade-in">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-600 to-indigo-500">
@@ -41,7 +41,7 @@ export default function TablaAnimales({ animales }) {
                 {[
                   "Nombre",
                   "Especie",
-                  "Fecha Nacimiento",
+                  "Fecha de Nacimiento",
                   "Sexo",
                   "Adoptable",
                   "Atenciones",
@@ -100,9 +100,7 @@ export default function TablaAnimales({ animales }) {
                       {animal.atenciones?.length > 0 ? (
                         <li
                           className="bg-yellow-50 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
-                          onClick={() => {
-                            handleAtenciones(animal.id);
-                          }}
+                          onClick={() => handleAtenciones(animal.id)}
                         >
                           ➕ Ver
                         </li>

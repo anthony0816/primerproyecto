@@ -69,7 +69,7 @@ model Animal{
   id Int @id @default(autoincrement())
   nombre String
   especie Especie_animales
-  fecha_nacido DateTime
+  fecha_nacido DateTime @default(now())
   sexo  Sexo_animales
   paraAdopcion Boolean @default(true)
   atenciones AtencionMedica[]
