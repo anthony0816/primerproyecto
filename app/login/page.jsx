@@ -1,7 +1,7 @@
 export default function Login(){
     return(
         <div>
-            <strong>Esta es la pagina del login </strong>
+            <strong>Esta es ledgvwrgrwhbebtha pagina del login </strong>
         </div>
     )
 }
