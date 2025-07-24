@@ -11,8 +11,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <NavBar/>
         <AuthProvider>
+          <NavBar/>
           <ProtectedRouter>{children}</ProtectedRouter>
         </AuthProvider>
       </body>

@@ -15,7 +15,7 @@ export default function ProtectedRouter({ children }) {
   }, [user, router]);
 
   // Mientras se redirige, puedes evitar renderizar el contenido:
-//   if (!user) return null;
+  // if (!user) return null;
 
   return <>{children}</>;
 }
