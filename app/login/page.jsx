@@ -4,20 +4,24 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/authContext";
 import LoadingSpinner from "@/components/LoadindSniper";
 import Link from "next/link";
+import { useNotifi } from "@/context/notifiContext";
+
 export default function login() {
   const [mensaje, setMensaje] = useState(null);
   const [username, setUsername] = useState("");
   const [password, setPasword] = useState("");
   const [mostrarContrasena, setMostrarContrasena] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { user, login } = useAuth();
+  const { login } = useAuth();
   const router = useRouter();
+  const { ShowNotification } = useNotifi();
 
   const fetchData = async () => {
     setLoading(true);
     const usuario = await login(username, password);
     if (usuario) {
-      router.push("/adopcion");
+      ShowNotification(`Usuario: ${usuario.nombre} autenticado exitosamente`);
+      router.push("/");
       setLoading(false);
       setMensaje("");
       return;
@@ -35,7 +39,7 @@ export default function login() {
           "🧙 Nombre y contraseña"
         )}
       </div>
-      {loading ? <LoadingSpinner /> : null}
+      {loading ? <LoadingSpinner text={"Verificanco Identidad"} /> : null}
 
       <input
         type="text"

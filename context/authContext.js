@@ -23,12 +23,12 @@ export function AuthProvider({ children }) {
   };
 
   const logout = async () => {
-    setUser(null);
     localStorage.removeItem("auth-token");
     const response = await fetch("api/usuarios/auth/logout", {
       method: "POST",
     });
     const data = response.json();
+    setUser(null);
     return data;
   };
 

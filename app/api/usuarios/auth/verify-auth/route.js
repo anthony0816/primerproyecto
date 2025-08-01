@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
+
 export async function GET(request) {
   const token = request.cookies.get("auth-token")?.value;
   if (!token) {

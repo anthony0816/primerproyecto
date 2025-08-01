@@ -14,5 +14,5 @@ export function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/","/adopcion", "/about"], 
+  matcher: ["/","/adopcion", "/about","/notificaciones","/solicitudes"], 
 };

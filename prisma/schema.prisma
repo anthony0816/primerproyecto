@@ -110,6 +110,7 @@ model Solicitud{
   usuarioId Int
   fecha DateTime @default(now())
   estado Estado_solicitud @default(espera)
+  descripcion String @default("")
 }
 
 model Notificacion{
@@ -117,4 +118,7 @@ model Notificacion{
   usuario Usuario @relation(fields: [usuarioId], references: [id])
   usuarioId Int 
   mensaje String
+  contexto String @default("")
+  leido Boolean @default(false)
+  fecha DateTime @default(now())
 }

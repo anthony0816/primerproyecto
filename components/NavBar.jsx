@@ -2,27 +2,54 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/authContext";
+import { useNotifi } from "@/context/notifiContext";
+import { VerifyForNewNotifications } from "@/libs/api";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setUser, logout, verify_auth } = useAuth();
+  const {
+    ShowNotification,
+    VerifyNewNotifications,
+    newNotifications,
+    setNewNotifications,
+  } = useNotifi();
 
   useEffect(() => {
+    console.log("ejecutando useEffect");
     async function loadAuth() {
       const currentUser = await verify_auth();
       if (currentUser) {
         setUser(currentUser);
+        return currentUser;
       }
     }
     loadAuth();
   }, []);
 
+  useEffect(() => {
+    if (!user) {
+      setNewNotifications(null);
+      return;
+    }
+    async function verify() {
+      await VerifyNewNotifications(user.id);
+    }
+    verify();
+  }, [user]);
+
   const navItems = [
-    { name: "Disponibles Para Adopción", href: "/adopcion" },
+    { name: "Adopción", href: "/adopcion" },
     { name: "Productos", href: "#" },
     { name: "Servicios", href: "#" },
     { name: "About us", href: "/about" },
   ];
+  if(user){
+    if(user.rol == "administrador"){
+      const newItem1 = {name:"Solicitudes", href:"/solicitudes"}
+      navItems.push(newItem1)
+    }
+  }
 
   return (
     <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
@@ -82,12 +109,21 @@ export default function NavBar() {
               <NavLink key={item.name} item={item} />
             ))}
           </div>
+          {/* boton de cerrar sesion */}
           <div className="flex aling-center">
             {user ? (
               <>
                 <div className="flex flex-col aling-center">
                   <p> Sesion: {user.nombre}</p>
-                  <button onClick={() => logout()} className="bg-red-200">
+                  <button
+                    onClick={async () => {
+                      await logout();
+                      ShowNotification(
+                        `Usuario: ${user.nombre} deslogueado correctamente`
+                      );
+                    }}
+                    className="bg-red-200"
+                  >
                     Cerrar Sesion
                   </button>
                 </div>
@@ -95,6 +131,36 @@ export default function NavBar() {
             ) : (
               ""
             )}
+          </div>
+          {/* Notificaciones */}
+          <div className="flex items-center">
+            <Link href={"/notificaciones"}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-7 h-7 cursor-pointer"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3c0 .386-.145.735-.405 1.001L4 17h5m6 0a3 3 0 01-6 0h6z"
+                />
+              </svg>
+            </Link>
+
+            {newNotifications ? (
+              <Link href={"/notificaciones"}>
+                <div className=" bg-red-600 px-1 rounded-lg text-center">
+                  <span className="text-white font-bold cursor-pointer">
+                    {newNotifications}
+                  </span>
+                </div>
+              </Link>
+            ) : null}
+
           </div>
         </div>
       </div>

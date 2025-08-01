@@ -2,10 +2,14 @@
 import ModalAtenciones from "./ModalAtenciones";
 import ModalSolicitudes from "./ModalSolicitudes";
 import { useRef } from "react";
+import { useAuth } from "@/context/authContext";
+import ModalAdopcion from "./ModalAdopcion";
 
 export default function TablaAnimales({ animales }) {
+  const { user } = useAuth();
   const modalAtencionesRef = useRef(null);
-  const modalSolicitudesRef = useRef(null)
+  const modalSolicitudesRef = useRef(null);
+  const modalAdopcionRef = useRef(null);
 
   function handleAtenciones(animalId) {
     if (modalAtencionesRef.current) {
@@ -13,18 +17,26 @@ export default function TablaAnimales({ animales }) {
     }
   }
   function handleSolicitudes(animalId) {
-    if(modalSolicitudesRef.current){
-      modalSolicitudesRef.current.fetchSolicitudes(animalId)
-    } 
+    if (modalSolicitudesRef.current) {
+      modalSolicitudesRef.current.fetchSolicitudes(animalId);
+    }
+  }
+  function handleAdopcion(animal) {
+    if (modalAdopcionRef.current) {
+      modalAdopcionRef.current.open(animal, user);
+    }
   }
 
   return (
     <>
       {/* //Modal expandir atenciones medicas */}
-      <ModalAtenciones ref={modalAtencionesRef}/>
+      <ModalAtenciones ref={modalAtencionesRef} />
 
       {/* //Modal expandir solicitudes de adopcion */}
-      <ModalSolicitudes ref={modalSolicitudesRef}/>
+      <ModalSolicitudes ref={modalSolicitudesRef} />
+
+      {/* Modal para opciones de solicitar adopcion  */}
+      <ModalAdopcion ref={modalAdopcionRef} />
 
       <div className="mx-auto min-w-[700px] max-w-[1300px] TablaAnimales">
         <div className="overflow-x-auto rounded-lg shadow-lg border border-gray-200 bg-white">
@@ -46,14 +58,20 @@ export default function TablaAnimales({ animales }) {
                   "Adoptable",
                   "Atenciones",
                   "Solicitudes",
-                ].map((header) => (
-                  <th
-                    key={header}
-                    className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider"
-                  >
-                    {header}
-                  </th>
-                ))}
+                  "Adoptar",
+                ].map((header) => {
+                  if (header == "Adoptar" && user?.rol == "administrador") {
+                    return null;
+                  }
+                  return (
+                    <th
+                      key={header}
+                      className="px-6 py-4 text-left text-xs font-bold text-white uppercase tracking-wider"
+                    >
+                      {header}
+                    </th>
+                  );
+                })}
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -129,6 +147,16 @@ export default function TablaAnimales({ animales }) {
                       </span>
                     )}
                   </td>
+                  {user?.rol == "cliente" ? (
+                    <td>
+                      <div
+                        className="bg-yellow-50 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
+                        onClick={() => handleAdopcion(animal)}
+                      >
+                        🏠 Solicitar Adopcion
+                      </div>
+                    </td>
+                  ) : null}
                 </tr>
               ))}
             </tbody>

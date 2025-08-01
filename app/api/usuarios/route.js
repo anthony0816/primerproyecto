@@ -12,7 +12,7 @@ export async function GET() {
 export async function POST(request) {
   try {
     const data = await request.json();
-    const { nombre, email, password, rol } = data;
+    const { nombre, email, password } = data;
 
     const hashedPasword = await bcrypt.hash(password, 10);
     const user = await prisma.usuario.create({
@@ -20,7 +20,6 @@ export async function POST(request) {
         nombre,
         email,
         password: hashedPasword,
-        rol,
       },
     });
     const { password: _, ...safeUser } = user;
@@ -30,6 +29,3 @@ export async function POST(request) {
     return NextResponse.json({ error: error.message });
   }
 }
-/* 
-
-*/

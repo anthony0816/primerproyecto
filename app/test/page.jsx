@@ -10,3 +10,7 @@ export default function Test() {
     </div>
   );
 }
+
+export function esperar(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
