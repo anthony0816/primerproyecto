@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/authContext";
 import { useNotifi } from "@/context/notifiContext";
-import { VerifyForNewNotifications } from "@/libs/api";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,16 +39,17 @@ export default function NavBar() {
 
   const navItems = [
     { name: "Adopción", href: "/adopcion" },
-    { name: "Productos", href: "#" },
-    { name: "Servicios", href: "#" },
-    { name: "About us", href: "/about" },
+    {name: "Cloudinary", href: "/cloudinary"}
   ];
-  if(user){
-    if(user.rol == "administrador"){
-      const newItem1 = {name:"Solicitudes", href:"/solicitudes"}
-      navItems.push(newItem1)
+  if (user) {
+    if (user.rol == "administrador") {
+      navItems.push(
+        { name: "Solicitudes", href: "/solicitudes" },
+        { name: "Registrar Animal", href: "/registrar-animal" }
+      );
     }
   }
+  navItems.push({ name: "About us", href: "/about" });
 
   return (
     <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
@@ -160,7 +160,6 @@ export default function NavBar() {
                 </div>
               </Link>
             ) : null}
-
           </div>
         </div>
       </div>

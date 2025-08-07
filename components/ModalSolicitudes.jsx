@@ -5,6 +5,7 @@ import { useNotifi } from "@/context/notifiContext";
 import LoadingSpinner from "./LoadindSniper";
 import { esperar } from "@/app/test/page";
 import ModalDenegarSolicitud from "./ModalDenegarSolicitud";
+import { setEstadoSolicitud } from "@/libs/api";
 
 const ModalSolicitudes = forwardRef((props, ref) => {
   const [solicitudes, setSolicitudes] = useState([]);
@@ -34,24 +35,6 @@ const ModalSolicitudes = forwardRef((props, ref) => {
     setSolicitudes(data);
   }
 
-  async function setEstadoSolicitud(solicitud, estado) {
-    const response = await fetch(
-      `http://localhost:3000/api/solicitudes/solicitud/${solicitud.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          estado: estado,
-        }),
-      }
-    );
-
-    const data = await response.json();
-    console.log("Response from Update", data);
-    setRefresh(!refresh);
-  }
 
   async function handleAceptar(solicitud) {
     const usuarioId = solicitud.usuarioId;

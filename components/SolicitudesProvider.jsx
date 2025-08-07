@@ -25,11 +25,13 @@ export function SolicitudesProvider({ solicitudes }) {
       const nombreAnimal = sol.animal?.nombre?.toLowerCase() || "";
       const nombreUsuario = sol.usuario?.nombre?.toLowerCase() || "";
       const descripcion = sol.descripcion?.toLowerCase() || "";
+      const especie = sol.animal.especie?.toLowerCase() || "";
 
       return (
         nombreAnimal.includes(finder.toLowerCase()) ||
         nombreUsuario.includes(finder.toLowerCase()) ||
-        descripcion.includes(finder.toLowerCase())
+        descripcion.includes(finder.toLowerCase()) ||
+        especie.includes(finder.toLowerCase())
       );
     });
     setData(filtradas);
@@ -39,27 +41,27 @@ export function SolicitudesProvider({ solicitudes }) {
   return (
     <>
       <section className="max-w-4xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="🔍 Buscar por animal, usuario o descripción..."
-          className="w-full px-4 py-2 border border-purple-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
-          onChange={(e) => setFinder(e.target.value)}
-        />
-      </div>
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="🔍 Buscar por animal, usuario o descripción..."
+            className="w-full px-4 py-2 border border-purple-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-400 transition"
+            onChange={(e) => setFinder(e.target.value)}
+          />
+        </div>
 
-      {data.length < 1 ? (
-        <div className="text-center text-gray-500 bg-purple-100 p-4 rounded-lg shadow-sm">
-          <strong>😕 Sin coincidencias</strong>
-        </div>
-      ) : (
-        <div className="grid gap-4">
-          {data.map((sol) => (
-            <SolicitudesCard key={sol.id} solicitud={sol} />
-          ))}
-        </div>
-      )}
-    </section>
+        {data.length < 1 ? (
+          <div className="text-center text-gray-500 bg-purple-100 p-4 rounded-lg shadow-sm">
+            <strong>😕 Sin coincidencias</strong>
+          </div>
+        ) : (
+          <div className="grid gap-4">
+            {data.map((sol) => (
+              <SolicitudesCard key={sol.id} solicitud={sol} />
+            ))}
+          </div>
+        )}
+      </section>
     </>
   );
 }

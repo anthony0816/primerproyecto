@@ -61,3 +61,22 @@ export async function MarcarNotificacionesComoLeidas(id) {
       }
       return notificaciones
   }
+
+    export async function setEstadoSolicitud(solicitud, estado) {
+    const response = await fetch(
+      `http://localhost:3000/api/solicitudes/solicitud/${solicitud.id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          estado: estado,
+        }),
+      }
+    );
+
+    const data = await response.json();
+    console.log("Response from Update", data);
+    return data 
+  }
