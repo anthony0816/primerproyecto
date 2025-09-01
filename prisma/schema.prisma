@@ -74,13 +74,21 @@ model Animal{
   paraAdopcion Boolean @default(true)
   atenciones AtencionMedica[]
   solicitudes Solicitud[]
+  imagenes Imagen[]
+}
+
+model Imagen{
+  id Int @id @default(autoincrement())
+  url String @default("")
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  animalId Int 
 }
 
 
 model AtencionMedica {
   id Int @id @default(autoincrement())
   tipo Tipo_AtencionMedica
-  animal   Animal    @relation(fields: [animalId], references: [id])
+  animal   Animal    @relation(fields: [animalId], references: [id], onDelete: Cascade)
   animalId Int
   veterinario Veterinario_asignado 
   fecha DateTime @default(now())
@@ -90,23 +98,23 @@ model AtencionMedica {
 }
 
 model AtencionMedica_consulta{
-  atencionMedica AtencionMedica @relation(fields: [atencionMedicaId], references: [id])
+  atencionMedica AtencionMedica @relation(fields: [atencionMedicaId], references: [id], onDelete: Cascade)
   atencionMedicaId Int @unique
   diagnostico String 
   tratamiento String
 }
 
 model AtencionMedica_vacunacion{
-  atencionMedica AtencionMedica @relation(fields: [atencionMedicaId], references: [id])
+  atencionMedica AtencionMedica @relation(fields: [atencionMedicaId], references: [id], onDelete: Cascade)
   atencionMedicaId Int @unique
   vacuna Vacunas
 }
 
 model Solicitud{
   id Int @id @default(autoincrement())
-  animal Animal @relation(fields: [animal_id], references: [id])
+  animal Animal @relation(fields: [animal_id], references: [id], onDelete: Cascade)
   animal_id Int
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   usuarioId Int
   fecha DateTime @default(now())
   estado Estado_solicitud @default(espera)
@@ -115,7 +123,7 @@ model Solicitud{
 
 model Notificacion{
   id Int @id @default(autoincrement())
-  usuario Usuario @relation(fields: [usuarioId], references: [id])
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
   usuarioId Int 
   mensaje String
   contexto String @default("")

@@ -1,0 +1,7 @@
+-- CreateTable
+CREATE TABLE "Imagen" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "url" TEXT NOT NULL DEFAULT '',
+    "animalId" INTEGER NOT NULL,
+    CONSTRAINT "Imagen_animalId_fkey" FOREIGN KEY ("animalId") REFERENCES "Animal" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);

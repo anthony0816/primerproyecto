@@ -38,45 +38,71 @@ export async function MarcarNotificacionesComoLeidas(id) {
   return data;
 }
 
-  export async function VerifyForNewNotifications(id) {
-    const response = await fetch("api/notificaciones/new", {
-      method: "POST",
+export async function VerifyForNewNotifications(id) {
+  const response = await fetch("api/notificaciones/new", {
+    method: "POST",
+    headers: {
+      "Content-type": "application/json",
+    },
+    body: JSON.stringify({
+      id: id,
+    }),
+  });
+  const data = await response.json();
+  return data;
+}
+
+export async function FetchNotifi(id) {
+  const response = await fetch(`/api/notificaciones/${id}`);
+  const data = await response.json();
+  const { notificaciones } = data;
+  if (!notificaciones) {
+    return null;
+  }
+  return notificaciones;
+}
+
+export async function setEstadoSolicitud(solicitud, estado) {
+  const response = await fetch(
+    `http://localhost:3000/api/solicitudes/solicitud/${solicitud.id}`,
+    {
+      method: "PUT",
       headers: {
-        "Content-type": "application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        id: id,
+        estado: estado,
       }),
+    }
+  );
+
+  const data = await response.json();
+  console.log("Response from Update", data);
+  return data;
+}
+
+export async function UploadIMG(files) {
+  try {
+    const formData = new FormData();
+    for (const file of files) {
+      formData.append("files", file); // usa "files" como nombre común
+    }
+
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
     });
-    const data = await response.json();
-    return data;
-  }
 
-  export async function FetchNotifi(id) {
-    const response = await fetch(`/api/notificaciones/${id}`);
-      const data = await response.json();
-      const { notificaciones } = data;
-      if (!notificaciones) {
-        return null
-      }
-      return notificaciones
-  }
+    if (!response.ok) {
+      console.error("Error en la respuesta del servidor");
+      return null;
+    }
 
-    export async function setEstadoSolicitud(solicitud, estado) {
-    const response = await fetch(
-      `http://localhost:3000/api/solicitudes/solicitud/${solicitud.id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          estado: estado,
-        }),
-      }
-    );
-
-    const data = await response.json();
-    console.log("Response from Update", data);
-    return data 
+    const result = await response.json();
+    console.log("Subida exitosa:", result);
+    return result.urls; // array de URLs
+  } catch (error) {
+    console.error("Error al subir imágenes:", error);
+    return null;
   }
+}

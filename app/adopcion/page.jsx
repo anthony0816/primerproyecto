@@ -1,9 +1,8 @@
 import { prisma } from "@/libs/prisma";
 import TablaAnimales from "@/components/TablaAnimales";
 export default async function AdopcionPage() {
-
   async function FetchAnimales() {
-    "use server"
+    "use server";
     const animales = await prisma.animal.findMany({
       include: {
         atenciones: true,
@@ -24,9 +23,27 @@ export default async function AdopcionPage() {
     });
     return deleted;
   };
-  
-  const animales = await FetchAnimales()
+
+  const EliminarSolicitud = async (animal_id, usuarioId) => {
+    "use server"
+    const res = await prisma.solicitud.deleteMany({
+      where: {
+        animal_id,
+        usuarioId,
+      },
+    });
+    return res;
+  };
+
+  const animales = await FetchAnimales();
   console.log("animales", animales);
 
-  return <TablaAnimales animales={animales} FunctionDelete={Delete} FetchAnimales={FetchAnimales}/>;
+  return (
+    <TablaAnimales
+      animales={animales}
+      FunctionDelete={Delete}
+      FetchAnimales={FetchAnimales}
+      EliminarSolicitud={EliminarSolicitud}
+    />
+  );
 }

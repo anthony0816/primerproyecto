@@ -38,8 +38,9 @@ export default function NavBar() {
   }, [user]);
 
   const navItems = [
+    {name: "Mascotas", href: "/mascotas"},
     { name: "Adopción", href: "/adopcion" },
-    {name: "Cloudinary", href: "/cloudinary"}
+    {name: "Cloudinary", href: "/cloudinary"},
   ];
   if (user) {
     if (user.rol == "administrador") {

@@ -1,4 +1,4 @@
-const cloudinary = require('cloudinary').v2;
+ export const cloudinary = require('cloudinary').v2;
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,

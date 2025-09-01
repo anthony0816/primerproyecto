@@ -1,9 +1,11 @@
 "use client";
 
 import { useForm } from "react-hook-form";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNotifi } from "@/context/notifiContext";
+import ImageUploader from "@/components/ImageUploader";
 
 // 1. Define los enums como arrays
 const especies = ["perro", "gato", "hamster", "ave"];
@@ -24,8 +26,9 @@ const schema = z.object({
   paraAdopcion: z.boolean().optional(),
 });
 
-export default function FormCrearAnimal({ callBackFunction }) {
-  const {ShowNotification} = useNotifi()
+export default function FormCrearAnimal({ CrearAnimal, CrearImagenes }) {
+  const { ShowNotification } = useNotifi();
+  const [urls, setUrls] = useState([]);
   const {
     register,
     handleSubmit,
@@ -34,7 +37,7 @@ export default function FormCrearAnimal({ callBackFunction }) {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     // Convierte fecha a Date si lo necesitas
     const payload = {
       ...data,
@@ -49,14 +52,19 @@ export default function FormCrearAnimal({ callBackFunction }) {
       fecha_nacido: new Date(data.fecha_nacido).toISOString(),
     };
 
-    
-
-    async function crear() {
-      const animal = await callBackFunction(toSave);
-      ShowNotification(`Animal creado exitosamente`)
-      console.log("animal creado", animal);
+    const animal = await CrearAnimal(toSave);
+    if (animal.id) {
+      if (urls.length > 0) {
+        const res = await CrearImagenes(animal.id, urls);
+        const { count } = res;
+        ShowNotification("Creado Correctamente")
+        if (!count) ShowNotification("Error adjunando imagenes");
+      } else {
+        ShowNotification("No se pudo cargar las imagenes sin embargo se creo el perfil");
+      }
+    } else {
+      ShowNotification("Error creando animal");
     }
-    crear();
   };
 
   return (
@@ -154,6 +162,10 @@ export default function FormCrearAnimal({ callBackFunction }) {
             Disponible para adopción
           </label>
         </div>
+      </div>
+
+      <div>
+        <ImageUploader setUrls={setUrls} />
       </div>
 
       {/* Pie */}

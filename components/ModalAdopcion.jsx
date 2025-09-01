@@ -1,4 +1,4 @@
-import { useState, forwardRef, useImperativeHandle, use } from "react";
+import { useState, forwardRef, useImperativeHandle, useRef } from "react";
 import { useNotifi } from "@/context/notifiContext";
 
 const ModalAdopcion = forwardRef((props, ref) => {
@@ -7,13 +7,15 @@ const ModalAdopcion = forwardRef((props, ref) => {
   const [descripcion, setDescripcion] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const { ShowNotification } = useNotifi();
+  const Refresh = useRef()
 
   useImperativeHandle(ref, () => ({
-    open: (animal, user) => {
+    open: (animal, user, refresh) => {
       console.log("Aninal", animal);
       setAnimal(animal);
       setUsuario(user);
       setIsOpen(true);
+      Refresh.current = refresh
       console.log("usuario:", user);
     },
   }));
@@ -27,7 +29,8 @@ const ModalAdopcion = forwardRef((props, ref) => {
     const response = await CreateSolicitud(usuario, descripcion);
     const solicitud = await response.json();
     if (solicitud) {
-      ShowNotification("Su solicitud ha sido procesada correctamente");
+      if(Refresh.current) await Refresh.current()
+        ShowNotification("Su solicitud ha sido procesada correctamente");
       setIsOpen(false)
       console.log("created solicitud:", solicitud);
     }

@@ -10,6 +10,7 @@ export default function TablaAnimales({
   animales,
   FunctionDelete,
   FetchAnimales,
+  EliminarSolicitud,
 }) {
   const { user } = useAuth();
   const [selectAnimal, setSelectAnimal] = useState({});
@@ -65,8 +66,15 @@ export default function TablaAnimales({
     }
   }
   function handleAdopcion(animal) {
+    const Refresh = async () => {
+      const animales = await FetchAnimales();
+      setAnimales(animales);
+    };
+
     if (modalAdopcionRef.current) {
-      modalAdopcionRef.current.open(animal, user);
+      if (user) {
+        modalAdopcionRef.current.open(animal, user, Refresh);
+      }
     }
   }
   function Seleccionar(value, animal_id) {
@@ -132,6 +140,23 @@ export default function TablaAnimales({
       setAnimales(animales);
     };
     modalEliminarAnimalRef.current.open(Delete);
+  }
+  function VerifyExistentSolicitud(animal) {
+    let boolean = false;
+    animal.solicitudes.forEach((sol) => {
+      if (sol.usuarioId == user?.id) {
+        boolean = true;
+        return;
+      }
+    });
+    return boolean;
+  }
+
+  async function CancelarSolicitud(animalId, userId) {
+    const res = await EliminarSolicitud(animalId, userId);
+    console.log("Eliminar:", res);
+    const animales = await FetchAnimales();
+    setAnimales(animales);
   }
 
   return (
@@ -324,7 +349,8 @@ export default function TablaAnimales({
                       </span>
                     )}
                   </td>
-                  {user?.rol == "cliente" ? (
+                  {user?.rol == "cliente" &&
+                  !VerifyExistentSolicitud(animal) ? (
                     <td>
                       <div
                         className="bg-yellow-50 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
@@ -333,7 +359,18 @@ export default function TablaAnimales({
                         🏠 Solicitar Adopcion
                       </div>
                     </td>
-                  ) : null}
+                  ) : (
+                    <td>
+                      <div
+                        className="bg-red-100 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
+                        onClick={async () =>
+                          CancelarSolicitud(animal.id, user?.id)
+                        }
+                      >
+                        ✖️ Eliminar Solicitud
+                      </div>
+                    </td>
+                  )}
                   {user?.rol == "administrador" ? (
                     <td>
                       <div className=" text-center">
