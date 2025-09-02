@@ -10,7 +10,7 @@ export async function GET(request, { params }) {
   });
   if (!usuario) {
     return NextResponse.json({
-      data: undefined,
+      data: null,
       mensaje: "error , puede que no exista el usuario con ese id ",
     });
   }

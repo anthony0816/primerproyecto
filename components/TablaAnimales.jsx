@@ -349,28 +349,35 @@ export default function TablaAnimales({
                       </span>
                     )}
                   </td>
-                  {user?.rol == "cliente" &&
-                  !VerifyExistentSolicitud(animal) ? (
-                    <td>
-                      <div
-                        className="bg-yellow-50 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
-                        onClick={() => handleAdopcion(animal)}
-                      >
-                        🏠 Solicitar Adopcion
-                      </div>
-                    </td>
-                  ) : (
-                    <td>
-                      <div
-                        className="bg-red-100 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
-                        onClick={async () =>
-                          CancelarSolicitud(animal.id, user?.id)
-                        }
-                      >
-                        ✖️ Eliminar Solicitud
-                      </div>
-                    </td>
-                  )}
+
+                  {user?.rol == "cliente" ? (
+                    <>
+
+                      {!VerifyExistentSolicitud(animal) ? (
+                        <td>
+                          <div
+                            className="bg-yellow-50 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
+                            onClick={() => handleAdopcion(animal)}
+                          >
+                            🏠 Solicitar Adopcion
+                          </div>
+                        </td>
+                      ) : (
+                        <td>
+                          <div
+                            className="bg-red-100 text-yellow-800 text-xs px-2 py-1 rounded-md inline-flex items-center mr-1 mb-1 cursor-pointer hover:bg-blue-100"
+                            onClick={async () =>
+                              CancelarSolicitud(animal.id, user?.id)
+                            }
+                          >
+                            ✖️ Eliminar Solicitud
+                          </div>
+                        </td>
+                      )}
+                    </>
+
+                  ) : null}
+                  
                   {user?.rol == "administrador" ? (
                     <td>
                       <div className=" text-center">

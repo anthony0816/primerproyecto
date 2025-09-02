@@ -7,32 +7,32 @@ const ModalAdopcion = forwardRef((props, ref) => {
   const [descripcion, setDescripcion] = useState(null);
   const [usuario, setUsuario] = useState(null);
   const { ShowNotification } = useNotifi();
-  const Refresh = useRef()
+  const Refresh = useRef();
 
   useImperativeHandle(ref, () => ({
-    open: (animal, user, refresh) => {
+    open: (animal, user, addSolicitudToAnimal) => {
       console.log("Aninal", animal);
       setAnimal(animal);
       setUsuario(user);
       setIsOpen(true);
-      Refresh.current = refresh
+      Refresh.current = addSolicitudToAnimal;
       console.log("usuario:", user);
     },
   }));
 
   async function handleAceptar() {
-    console.log("contenido de la descriptcion", descripcion);
     if (!descripcion) {
       ShowNotification("La descripcion no puede estar vacia");
       return;
     }
     const response = await CreateSolicitud(usuario, descripcion);
-    const solicitud = await response.json();
+    const data = await response.json();
+    const {solicitud} = data
+    
     if (solicitud) {
-      if(Refresh.current) await Refresh.current()
-        ShowNotification("Su solicitud ha sido procesada correctamente");
-      setIsOpen(false)
-      console.log("created solicitud:", solicitud);
+      if (Refresh.current) await Refresh.current(solicitud);
+      ShowNotification("Su solicitud ha sido procesada correctamente");
+      setIsOpen(false);
     }
   }
 

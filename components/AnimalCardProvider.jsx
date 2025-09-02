@@ -59,7 +59,7 @@ export default function AnimalCardProvider({ animales }) {
       </div>
 
       {Animales.map((animal) => (
-        <AnimalCard key={animal.id} animal={animal} />
+        <AnimalCard key={animal.id} Animal={animal} />
       ))}
     </>
   );

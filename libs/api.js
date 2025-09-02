@@ -1,3 +1,4 @@
+
 export async function CreateNotificacion(usuario_id, descrip, contexto) {
   const res = await fetch("/api/notificaciones/create", {
     method: "POST",
@@ -105,4 +106,19 @@ export async function UploadIMG(files) {
     console.error("Error al subir imágenes:", error);
     return null;
   }
+}
+
+export async function EliminarSolicitud(animalId,userId) {
+  const res = await fetch("/api/solicitudes/solicitud",{
+    method : "DELETE",
+    headers: {
+      "Content-type": "Application/json"
+    },
+    body:JSON.stringify({
+      animalId,
+      userId
+    })
+  })
+  const data = await res.json()
+  return data
 }

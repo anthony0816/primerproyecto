@@ -1,6 +1,7 @@
 "use client";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import { useAuth } from "@/context/authContext";
 
 export default function Perfil() {
   const { id } = useParams();
@@ -8,6 +9,8 @@ export default function Perfil() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [animal, setAnimal] = useState(null);
+  const [dataUsers, setDataUsers] = useState({});
+  const { user } = useAuth();
 
   useEffect(() => {
     async function loadAnimal() {
@@ -18,9 +21,22 @@ export default function Perfil() {
         return;
       }
       setAnimal(animal);
+      animal.solicitudes.forEach((sol) => {
+        getUserData(sol.usuarioId);
+      });
     }
     loadAnimal();
   }, []);
+
+  function getUserData(userId) {
+    async function loadUser(userId) {
+      const res = await fetch(`/api/usuarios/${userId}`);
+      const data = await res.json();
+      if (data.data == null) return;
+      setDataUsers((prev) => ({ ...prev, [userId]: data.data }));
+    }
+    loadUser(userId);
+  }
 
   const openModal = (imagen, index) => {
     setSelectedImage(imagen);
@@ -280,7 +296,14 @@ export default function Perfil() {
                     >
                       <div className="flex justify-between items-start mb-1">
                         <span className="font-medium">
-                          Usuario #{solicitud.usuarioId}
+                          Usuario :{" "}
+                          {user?.id == solicitud.usuarioId
+                            ? "Tú"
+                            : dataUsers[solicitud.usuarioId]?.nombre}{" "}
+                          <br />
+                          <span className="text-gray-600">
+                            Email : {dataUsers[solicitud.usuarioId]?.email}
+                          </span>
                         </span>
                         <span
                           className={`text-xs px-2 py-1 rounded-full ${
@@ -297,11 +320,6 @@ export default function Perfil() {
                       <p className="text-sm text-gray-600 mb-1">
                         {new Date(solicitud.fecha).toLocaleDateString()}
                       </p>
-                      {solicitud.descripcion && (
-                        <p className="text-sm mt-1">
-                          "{solicitud.descripcion}"
-                        </p>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -311,7 +329,7 @@ export default function Perfil() {
             </div>
           </div>
         </div>
-              
+
         {/* Estadísticas rápidas */}
         <div className="bg-indigo-50 p-4 border-t">
           <div className="flex justify-around text-center">
