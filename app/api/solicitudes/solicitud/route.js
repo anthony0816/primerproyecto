@@ -2,7 +2,7 @@ import { prisma } from "@/libs/prisma";
 import { NextResponse } from "next/server";
 
 export async function GET() {
-return NextResponse.json("hola mundo")
+  return NextResponse.json("hola mundo");
 }
 
 export async function POST(request) {

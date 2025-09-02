@@ -38,9 +38,8 @@ export default function NavBar() {
   }, [user]);
 
   const navItems = [
-    {name: "Mascotas", href: "/mascotas"},
+    { name: "Mascotas", href: "/mascotas" },
     { name: "Adopción", href: "/adopcion" },
-    
   ];
   if (user) {
     if (user.rol == "administrador") {

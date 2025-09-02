@@ -1,5 +1,4 @@
 import { prisma } from "@/libs/prisma";
-import { AnimalCard } from "@/components/AnimalCard";
 import AnimalCardProvider from "@/components/AnimalCardProvider";
 
 export default async function MascotasPage() {
@@ -20,5 +19,5 @@ export default async function MascotasPage() {
       </>
     );
   }
-  return <AnimalCardProvider animales={animales}/>
+  return <AnimalCardProvider animales={animales} />;
 }

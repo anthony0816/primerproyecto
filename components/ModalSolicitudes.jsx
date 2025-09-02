@@ -34,7 +34,6 @@ const ModalSolicitudes = forwardRef((props, ref) => {
     setSolicitudes(data);
   }
 
-
   async function handleAceptar(solicitud) {
     const usuarioId = solicitud.usuarioId;
     const nombreAnimal = solicitud.animal.nombre;

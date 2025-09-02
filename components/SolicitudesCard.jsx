@@ -89,7 +89,7 @@ export function SolicitudesCard({ solicitud }) {
       EstablecerEstado("denegado");
       setRefresh(!refres);
       setisLoading(false);
-      return
+      return;
     }
     ShowNotification("Algo salio mal ");
     setisLoading(true);

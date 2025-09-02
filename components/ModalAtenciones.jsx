@@ -4,14 +4,11 @@ import LoadingSpinner from "./LoadindSniper";
 
 const ModalAtenciones = forwardRef((props, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [setAnimalId] = useState(null);
   const [atenciones, setAtenciones] = useState([]);
 
   // Expone métodos al componente padre
   useImperativeHandle(ref, () => ({
     open: (id) => {
-      setAnimalId(id);
-      // Aquí harías la llamada a la API para obtener las atenciones del animal
       fetchAtenciones(id);
       setIsOpen(true);
     },

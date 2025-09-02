@@ -4,7 +4,11 @@ export function NotificationCard({ context, descrip, leido, fecha }) {
       <div
         className={` relative bg-white rounded-lg shadow-xl border border-gray-200 min-w-md p-6`}
       >
-        <div className={`flex justify-end ${leido == false? "text-black-600":"text-gray-400"} `}>
+        <div
+          className={`flex justify-end ${
+            leido == false ? "text-black-600" : "text-gray-400"
+          } `}
+        >
           <p>
             {new Date(fecha).toLocaleString("es-ES", {
               year: "numeric",
@@ -12,7 +16,7 @@ export function NotificationCard({ context, descrip, leido, fecha }) {
               day: "numeric",
               hour: "2-digit",
               minute: "2-digit",
-              hour12: true, 
+              hour12: true,
             })}
           </p>
         </div>
