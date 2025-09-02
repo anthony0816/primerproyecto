@@ -3,14 +3,13 @@ import { forwardRef, useImperativeHandle, useState, useRef } from "react";
 import { useAuth } from "@/context/authContext";
 import { useNotifi } from "@/context/notifiContext";
 import LoadingSpinner from "./LoadindSniper";
-import { esperar } from "@/app/test/page";
+
 import ModalDenegarSolicitud from "./ModalDenegarSolicitud";
 import { setEstadoSolicitud } from "@/libs/api";
 
 const ModalSolicitudes = forwardRef((props, ref) => {
   const [solicitudes, setSolicitudes] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
-  const [refresh, setRefresh] = useState(false);
   const [id_animal, setId_animal] = useState(null);
   const [loadingMap, setLoadingMap] = useState({});
   const { user } = useAuth();

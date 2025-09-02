@@ -4,7 +4,7 @@ import LoadingSpinner from "./LoadindSniper";
 
 const ModalAtenciones = forwardRef((props, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [animalId, setAnimalId] = useState(null);
+  const [setAnimalId] = useState(null);
   const [atenciones, setAtenciones] = useState([]);
 
   // Expone métodos al componente padre

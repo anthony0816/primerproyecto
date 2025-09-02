@@ -1,6 +1,5 @@
 import { useState, useRef } from "react";
 import LoadingSpinner from "./LoadindSniper";
-import { esperar } from "@/app/test/page";
 import { setEstadoSolicitud } from "@/libs/api";
 import { useNotifi } from "@/context/notifiContext";
 import { useAuth } from "@/context/authContext";

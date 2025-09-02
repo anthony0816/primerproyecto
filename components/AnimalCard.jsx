@@ -5,6 +5,7 @@ import { useAuth } from "@/context/authContext";
 import { useRouter } from "next/navigation";
 import { EliminarSolicitud } from "@/libs/api";
 
+
 export function AnimalCard({ Animal }) {
   const modalAdopcionRef = useRef();
   const { user } = useAuth();
