@@ -15,6 +15,7 @@ export async function POST(request) {
       mensaje: "Falta uno de los dos parametros",
     });
   }
+
   const usuario = await prisma.usuario.findMany({
     where: {
       nombre: username,
@@ -42,7 +43,7 @@ export async function POST(request) {
         secure: process.env.NODE_ENV === "production",
         sameSite: "lax",
         path: "/",
-        maxAge: 60*60*24, // 24 horas
+        maxAge: 60 * 60 * 24, // 24 horas
       });
 
       const response = NextResponse.json({

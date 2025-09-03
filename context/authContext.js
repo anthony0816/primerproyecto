@@ -32,21 +32,20 @@ export function AuthProvider({ children }) {
     return data;
   };
 
-  const verify_auth = async()=>{
-    const response = await fetch("/api/usuarios/auth/verify-auth")
-    const data = await response.json()
-    
-    const {user}= data
+  const verify_auth = async () => {
+    const response = await fetch("/api/usuarios/auth/verify-auth");
+    const data = await response.json();
 
-    if (!(user)){
-      return null
+    const { user } = data;
+
+    if (!user) {
+      return null;
+    } else {
+      return user;
     }
-    else{
-      return user
-    }
-  } 
+  };
   return (
-    <AuthContext.Provider value={{ user,setUser, login, logout,verify_auth }}>
+    <AuthContext.Provider value={{ user, setUser, login, logout, verify_auth }}>
       {children}
     </AuthContext.Provider>
   );

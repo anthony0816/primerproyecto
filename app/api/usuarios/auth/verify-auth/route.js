@@ -18,6 +18,7 @@ export async function GET(request) {
       user: decoded, // Contiene { id, nombre, email, rol }
     });
   } catch (error) {
+    console.log("Error Verificanco autenticacion", error);
     return NextResponse.json(
       { valid: false, message: "Token inválido o expirado" },
       { status: 401 }

@@ -130,3 +130,12 @@ model Notificacion{
   leido Boolean @default(false)
   fecha DateTime @default(now())
 }
+model VerificationCode{
+  id Int @unique
+  email String 
+  code String
+  expiresAt DateTime
+  createdAt DateTime
+  used Boolean @default(false)
+}
+

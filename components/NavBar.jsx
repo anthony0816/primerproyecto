@@ -15,7 +15,6 @@ export default function NavBar() {
   } = useNotifi();
 
   useEffect(() => {
-    console.log("ejecutando useEffect");
     async function loadAuth() {
       const currentUser = await verify_auth();
       if (currentUser) {
