@@ -24,9 +24,12 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     localStorage.removeItem("auth-token");
-    const response = await fetch("api/usuarios/auth/logout", {
-      method: "POST",
-    });
+    const response = await fetch(
+      "http://localhost:3000/api/usuarios/auth/logout",
+      {
+        method: "POST",
+      }
+    );
     const data = response.json();
     setUser(null);
     return data;

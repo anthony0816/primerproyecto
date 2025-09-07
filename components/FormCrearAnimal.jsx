@@ -57,10 +57,13 @@ export default function FormCrearAnimal({ CrearAnimal, CrearImagenes }) {
       if (urls.length > 0) {
         const res = await CrearImagenes(animal.id, urls);
         const { count } = res;
-        ShowNotification("Creado Correctamente")
+        ShowNotification("Creado Correctamente");
+
         if (!count) ShowNotification("Error adjunando imagenes");
       } else {
-        ShowNotification("No se pudo cargar las imagenes sin embargo se creo el perfil");
+        ShowNotification(
+          "No se pudo cargar las imagenes sin embargo se creo el perfil"
+        );
       }
     } else {
       ShowNotification("Error creando animal");
@@ -157,7 +160,7 @@ export default function FormCrearAnimal({ CrearAnimal, CrearImagenes }) {
 
         {/* Para adopción */}
         <div className="flex items-center gap-2">
-          <input type="checkbox" {...register("paraAdopcion")} />
+          <input type="checkbox" {...register("paraAdopcion")} checked={true} />
           <label className="text-sm text-gray-700">
             Disponible para adopción
           </label>

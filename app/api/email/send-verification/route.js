@@ -5,6 +5,8 @@ import { prisma } from "@/libs/prisma";
 
 export async function POST(request) {
   try {
+    console.log("Email:", process.env.EMAIL_USER);
+    console.log("contrasena:", process.env.EMAIL_PASS);
     const { email } = await request.json();
 
     if (!email) {
@@ -29,12 +31,14 @@ export async function POST(request) {
       update: {
         code: hashedCode,
         expiresAt: new Date(Date.now() + 10 * 60 * 1000), // 10 min
+        createdAt: new Date(Date.now()),
         used: false,
       },
       create: {
         email,
         code: hashedCode,
         expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+        createdAt: new Date(Date.now()),
         used: false,
       },
     });
@@ -52,7 +56,7 @@ export async function POST(request) {
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Verifica tu email - Mi App",
+      subject: "Verifica tu email - Clinica Veterinaria",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2>Verificación de Email</h2>
@@ -79,7 +83,10 @@ export async function POST(request) {
   } catch (error) {
     console.error("Error enviando email:", error);
     return NextResponse.json(
-      { error: "Error enviando email de verificación" },
+      {
+        error: `Error enviando email de verificación : ${error}`,
+        failed: true,
+      },
       { status: 500 }
     );
   }

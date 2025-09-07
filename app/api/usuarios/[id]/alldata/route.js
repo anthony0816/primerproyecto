@@ -7,6 +7,10 @@ export async function GET(request, { params }) {
     where: {
       id: Number(id),
     },
+    include: {
+      solicitudes: true,
+      notificaciones: true,
+    },
   });
   if (!usuario) {
     return NextResponse.json({

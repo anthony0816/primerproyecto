@@ -3,16 +3,13 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/authContext";
 import { useNotifi } from "@/context/notifiContext";
+import UserCard from "./UserCard";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setUser, logout, verify_auth } = useAuth();
-  const {
-    ShowNotification,
-    VerifyNewNotifications,
-    newNotifications,
-    setNewNotifications,
-  } = useNotifi();
+  const { VerifyNewNotifications, newNotifications, setNewNotifications } =
+    useNotifi();
 
   useEffect(() => {
     async function loadAuth() {
@@ -49,6 +46,8 @@ export default function NavBar() {
     }
   }
   navItems.push({ name: "About us", href: "/about" });
+
+  if (!user) return null;
 
   return (
     <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
@@ -112,20 +111,7 @@ export default function NavBar() {
           <div className="flex aling-center">
             {user ? (
               <>
-                <div className="flex flex-col aling-center">
-                  <p> Sesion: {user.nombre}</p>
-                  <button
-                    onClick={async () => {
-                      await logout();
-                      ShowNotification(
-                        `Usuario: ${user.nombre} deslogueado correctamente`
-                      );
-                    }}
-                    className="bg-red-200"
-                  >
-                    Cerrar Sesion
-                  </button>
-                </div>
+                <UserCard user={user} logout={logout} />
               </>
             ) : (
               ""

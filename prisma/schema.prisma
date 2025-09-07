@@ -131,8 +131,8 @@ model Notificacion{
   fecha DateTime @default(now())
 }
 model VerificationCode{
-  id Int @unique
-  email String 
+  id Int @id @default(autoincrement())
+  email String @unique
   code String
   expiresAt DateTime
   createdAt DateTime
