@@ -4,13 +4,14 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/context/authContext";
 import { useNotifi } from "@/context/notifiContext";
 import UserCard from "./UserCard";
+import { useLoadingRouter } from "./RouterProvider";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, setUser, logout, verify_auth } = useAuth();
   const { VerifyNewNotifications, newNotifications, setNewNotifications } =
     useNotifi();
-
+  const { router } = useLoadingRouter();
   useEffect(() => {
     async function loadAuth() {
       const currentUser = await verify_auth();
@@ -41,7 +42,8 @@ export default function NavBar() {
     if (user.rol == "administrador") {
       navItems.push(
         { name: "Solicitudes", href: "/solicitudes" },
-        { name: "Registrar Animal", href: "/registrar-animal" }
+        { name: "Registrar Animal", href: "/registrar-animal" },
+        { name: "Cloudinary Assents", href: "/assets" }
       );
     }
   }
@@ -55,12 +57,12 @@ export default function NavBar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           {/* Logo con gradiente animado */}
-          <Link
-            href="/"
-            className="flex items-center text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-500 hover:from-pink-600 hover:to-orange-500 transition-all duration-500"
+          <div
+            onClick={() => router("/")}
+            className="flex items-center text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-500 hover:from-pink-600 hover:to-orange-500 transition-all duration-500 cursor-pointer"
           >
             Clínica Veterinaria
-          </Link>
+          </div>
 
           {/* Menú Hamburguesa (mobile) */}
           <div className="flex items-center md:hidden">
@@ -137,13 +139,13 @@ export default function NavBar() {
             </Link>
 
             {newNotifications ? (
-              <Link href={"/notificaciones"}>
+              <div onClick={() => router("/notificaciones")}>
                 <div className=" bg-red-600 px-1 rounded-lg text-center">
                   <span className="text-white font-bold cursor-pointer">
                     {newNotifications}
                   </span>
                 </div>
-              </Link>
+              </div>
             ) : null}
           </div>
         </div>
@@ -171,10 +173,11 @@ export default function NavBar() {
 
 // Componente para links de desktop (con subrayado animado)
 function NavLink({ item }) {
+  const { router } = useLoadingRouter();
   return (
-    <Link
-      href={item.href}
-      className={`relative px-1 py-2 text-sm font-medium transition-all duration-300 ${
+    <div
+      onClick={() => router(item.href)}
+      className={` cursor-pointer relative px-1 py-2 text-sm font-medium transition-all duration-300 ${
         item.href === "#"
           ? "text-gray-400 cursor-not-allowed"
           : "text-gray-700 hover:text-indigo-600 group"
@@ -184,7 +187,7 @@ function NavLink({ item }) {
       {item.href !== "#" && (
         <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
       )}
-    </Link>
+    </div>
   );
 }
 

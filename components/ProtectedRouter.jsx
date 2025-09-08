@@ -1,22 +1,22 @@
 "use client";
 import { useEffect } from "react";
 import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
+import { useLoadingRouter } from "./RouterProvider";
 
 export default function ProtectedRouter({ children }) {
   const { user, verify_auth } = useAuth();
-  const router = useRouter();
+  const { router } = useLoadingRouter();
 
   useEffect(() => {
     async function loadVerify() {
       const authUser = await verify_auth();
       if (!authUser) {
         console.log("usuario vacío, redirigiendo...");
-        router.replace("/login");
+        router("/login");
       }
     }
     loadVerify();
-  }, [user, router]);
+  }, [user]);
 
   // Mientras se redirige, puedes evitar renderizar el contenido:
   // if (!user) return null;

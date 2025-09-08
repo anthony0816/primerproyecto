@@ -1,6 +1,8 @@
-import Link from "next/link";
+"use client";
+import { useLoadingRouter } from "@/components/RouterProvider";
 
 export default function Home() {
+  const { router } = useLoadingRouter();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-100 to-white">
       <div className="max-w-xl w-full text-center space-y-8">
@@ -13,33 +15,33 @@ export default function Home() {
         </p>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-8">
-          <Link
-            href="/mascotas"
-            className="bg-white shadow-md rounded-lg p-6 hover:bg-purple-50 transition-colors border border-purple-200"
+          <div
+            onClick={() => router("/mascotas")}
+            className=" cursor-pointer bg-white shadow-md rounded-lg p-6 hover:bg-purple-50 transition-colors border border-purple-200"
           >
             <div className="text-3xl mb-2">🐶</div>
             <h2 className="text-xl font-semibold text-purple-500">Mascotas</h2>
-          </Link>
+          </div>
 
-          <Link
-            href="/about"
-            className="bg-white shadow-md rounded-lg p-6 hover:bg-purple-50 transition-colors border border-purple-200"
+          <div
+            onClick={() => router("/about")}
+            className=" cursor-pointer bg-white shadow-md rounded-lg p-6 hover:bg-purple-50 transition-colors border border-purple-200"
           >
             <div className="text-3xl mb-2">📖</div>
             <h2 className="text-xl font-semibold text-purple-500">
               Sobre Nosotros
             </h2>
-          </Link>
+          </div>
 
-          <Link
-            href="/notificaciones"
+          <div
+            onClick={() => router("/notificaciones")}
             className="bg-white shadow-md rounded-lg p-6 hover:bg-purple-50 transition-colors border border-purple-200"
           >
             <div className="text-3xl mb-2">🔔</div>
             <h2 className="text-xl font-semibold text-purple-500">
               Notificaciones
             </h2>
-          </Link>
+          </div>
         </div>
       </div>
     </div>

@@ -1,11 +1,10 @@
 import { useState, useRef } from "react";
 import { useClickOutside } from "@/libs/Myhooks";
-import { useRouter } from "next/navigation";
-
+import { useLoadingRouter } from "./RouterProvider";
 export default function UserCard({ user, logout }) {
   const [isOpen, setIsOpen] = useState(false);
   const cardRef = useRef(null);
-  const router = useRouter();
+  const { router } = useLoadingRouter();
 
   function switchState() {
     setIsOpen(!isOpen);
@@ -15,7 +14,7 @@ export default function UserCard({ user, logout }) {
   });
 
   function GoToPerfil() {
-    router.push(`/perfilUsuario`);
+    router(`/perfilUsuario`);
     setIsOpen(false);
   }
   function onLogout() {

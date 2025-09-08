@@ -2,14 +2,13 @@
 import ModalAdopcion from "./ModalAdopcion";
 import { useRef, useState, useEffect } from "react";
 import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/navigation";
 import { EliminarSolicitud } from "@/libs/api";
-
+import { useLoadingRouter } from "./RouterProvider";
 
 export function AnimalCard({ Animal }) {
   const modalAdopcionRef = useRef();
   const { user } = useAuth();
-  const router = useRouter();
+  const { router } = useLoadingRouter();
   const [animal, setAnimal] = useState(null);
 
   useEffect(() => {
@@ -17,7 +16,6 @@ export function AnimalCard({ Animal }) {
   }, []);
 
   function handleAdopcion() {
-
     const AddSolicitudToAnimal = (solicitud) => {
       const newAnimal = {
         ...animal,
@@ -132,7 +130,7 @@ export function AnimalCard({ Animal }) {
                 <button
                   className="bg-blue-300 hover:bg-blue-400 rounded-lg p-1 px-2 transition"
                   onClick={() => {
-                    router.push(`/mascotas/${animal.id}`);
+                    router(`/mascotas/${animal.id}`);
                   }}
                 >
                   Ver perfil
