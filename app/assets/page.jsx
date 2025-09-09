@@ -60,6 +60,24 @@ export default function AssetsPage() {
     fetchAssets(true); // reset = true para cargar desde cero
   }, []);
 
+  async function GetAllUrls() {
+    const dbRes = await fetch("api/imagenes/getallurls");
+    if (!dbRes.ok) return;
+    const dbUrls = await dbRes.json();
+    console.log("urls From BACKEND", dbUrls);
+
+    const cloudRes = await fetch("api/cloudinary/assets/getallurls", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ dbUrls }),
+    });
+    if (!cloudRes.ok) {
+      return;
+    }
+    const cloudUrls = await cloudRes.json();
+    console.log("urls From CLOUDINARY", cloudUrls);
+  }
+
   // Eliminar asset
   async function deleteAsset(public_id) {
     if (!confirm("¿Seguro que quieres eliminar esta imagen?")) return;
@@ -76,8 +94,18 @@ export default function AssetsPage() {
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-6">Mis Assets de Cloudinary</h1>
+    <div className="max-w-6xl mx-auto p-6 min-w-100">
+      <div className="flex justify-between  w-1/2 min-w-80">
+        <h3 className="text-2xl text-gray-500 active:text-gray-700  hover:text-gray-700 font-bold mb-6 cursor-pointer">
+          Todos los Assets
+        </h3>
+        <h3
+          onClick={GetAllUrls}
+          className="text-2xl text-red-400 hover:text-red-500 font-bold mb-6 cursor-pointer"
+        >
+          En desuso
+        </h3>
+      </div>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {images.map((img) => (
           <div

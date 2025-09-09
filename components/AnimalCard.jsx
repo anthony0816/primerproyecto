@@ -67,16 +67,16 @@ export function AnimalCard({ Animal }) {
       <ModalAdopcion ref={modalAdopcionRef} />
       <div
         key={animal.id}
-        className="my-10 p-2 border rounded-lg mx-2  max-w-350 mx-auto"
+        className="my-10 p-2 border rounded-lg mx-2  max-w-350 mx-auto min-w-100 "
       >
-        <div className="flex flex-row items-center">
-          <div className="flex-1">
+        <div className="flex flex-wrap items-center">
+          <div className="flex-1 flex justify-center min-w-[250px]">
             {animal.imagenes.length < 1 ? (
               <>
                 <img
                   src="file.svg"
                   alt="imagen de perfil fallida"
-                  className="max-w-100"
+                  className="max-w-100 m-auto"
                 />
               </>
             ) : (
@@ -90,7 +90,7 @@ export function AnimalCard({ Animal }) {
             )}
           </div>
 
-          <div className="flex-1  max-h-100 overflow-hidden">
+          <div className="flex-1 flex flex-col justify-center items-center  max-h-100 overflow-hidden min-w-[280px]">
             <h2>{animal.nombre}</h2>
             <div className="my-10 ">
               <h3>Info:</h3>
@@ -100,42 +100,39 @@ export function AnimalCard({ Animal }) {
               <p>Solicitudes de adopcion: {animal.solicitudes.length}</p>
             </div>
 
-            <div className="">
-              <h3>Acciones:</h3>
-              <div className="w-1/2 my-5 flex justify-around min-w-60">
-                {user?.rol == "cliente" ? (
-                  <>
-                    {!VerifyExistentSolicitud() ? (
+            <div className="w-1/2 my-5 flex justify-around min-w-60">
+              {user?.rol == "cliente" ? (
+                <>
+                  {!VerifyExistentSolicitud() ? (
+                    <button
+                      className="bg-green-300 hover:bg-green-400 rounded-lg p-1 px-2 transition"
+                      onClick={() => handleAdopcion()}
+                    >
+                      Solicitar Adopcion
+                    </button>
+                  ) : (
+                    <>
                       <button
-                        className="bg-green-300 hover:bg-green-400 rounded-lg p-1 px-2 transition"
-                        onClick={() => handleAdopcion()}
+                        className="bg-red-300 hover:bg-red-400 rounded-lg p-1 px-2 transition"
+                        onClick={() =>
+                          handleCancelarSolicitud(animal.id, user?.id)
+                        }
                       >
-                        Solicitar Adopcion
+                        Eliminar Solicitud
                       </button>
-                    ) : (
-                      <>
-                        <button
-                          className="bg-red-300 hover:bg-red-400 rounded-lg p-1 px-2 transition"
-                          onClick={() =>
-                            handleCancelarSolicitud(animal.id, user?.id)
-                          }
-                        >
-                          Eliminar Solicitud
-                        </button>
-                      </>
-                    )}
-                  </>
-                ) : null}
+                    </>
+                  )}
+                </>
+              ) : null}
 
-                <button
-                  className="bg-blue-300 hover:bg-blue-400 rounded-lg p-1 px-2 transition"
-                  onClick={() => {
-                    router(`/mascotas/${animal.id}`);
-                  }}
-                >
-                  Ver perfil
-                </button>
-              </div>
+              <button
+                className="bg-blue-300 hover:bg-blue-400 rounded-lg p-1 px-2 transition"
+                onClick={() => {
+                  router(`/mascotas/${animal.id}`);
+                }}
+              >
+                Ver perfil
+              </button>
             </div>
           </div>
         </div>

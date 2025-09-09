@@ -1,10 +1,10 @@
 "use client";
-import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/context/authContext";
 import { useNotifi } from "@/context/notifiContext";
 import UserCard from "./UserCard";
 import { useLoadingRouter } from "./RouterProvider";
+import { useClickOutside } from "@/libs/Myhooks";
 
 export default function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -12,6 +12,9 @@ export default function NavBar() {
   const { VerifyNewNotifications, newNotifications, setNewNotifications } =
     useNotifi();
   const { router } = useLoadingRouter();
+  const MenuMovilRef = useRef();
+
+  setOutsideClink();
   useEffect(() => {
     async function loadAuth() {
       const currentUser = await verify_auth();
@@ -34,6 +37,10 @@ export default function NavBar() {
     verify();
   }, [user]);
 
+  function setOutsideClink() {
+    useClickOutside(MenuMovilRef, () => setIsMenuOpen(false));
+  }
+
   const navItems = [
     { name: "Mascotas", href: "/mascotas" },
     { name: "Adopción", href: "/adopcion" },
@@ -52,7 +59,7 @@ export default function NavBar() {
   if (!user) return null;
 
   return (
-    <nav className="bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
+    <nav className="min-w-100 bg-white shadow-lg border-b border-gray-200 sticky top-0 z-50">
       {/* Contenedor principal */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
@@ -66,41 +73,34 @@ export default function NavBar() {
 
           {/* Menú Hamburguesa (mobile) */}
           <div className="flex items-center md:hidden">
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-100 focus:outline-none transition"
-              aria-label="Menú"
-            >
-              {isMenuOpen ? (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            {isMenuOpen ? null : (
+              <>
+                <button
+                  disabled={isMenuOpen}
+                  onClick={() => {
+                    if (!isMenuOpen) {
+                      setIsMenuOpen(true);
+                    }
+                  }}
+                  className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-indigo-600 hover:bg-gray-100 focus:outline-none transition"
+                  aria-label="Menú"
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
-              )}
-            </button>
+                  <svg
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                </button>
+              </>
+            )}
           </div>
 
           {/* Links de navegación (desktop) */}
@@ -121,7 +121,7 @@ export default function NavBar() {
           </div>
           {/* Notificaciones */}
           <div className="flex items-center">
-            <Link href={"/notificaciones"}>
+            <div onClick={() => router("/notificaciones")}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-7 h-7 cursor-pointer"
@@ -136,7 +136,7 @@ export default function NavBar() {
                   d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3c0 .386-.145.735-.405 1.001L4 17h5m6 0a3 3 0 01-6 0h6z"
                 />
               </svg>
-            </Link>
+            </div>
 
             {newNotifications ? (
               <div onClick={() => router("/notificaciones")}>
@@ -152,10 +152,12 @@ export default function NavBar() {
       </div>
 
       {/* Menú móvil (animado) */}
+
       <div
         className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
           isMenuOpen ? "max-h-96" : "max-h-0"
         }`}
+        ref={MenuMovilRef}
       >
         <div className="px-2 pt-2 pb-4 space-y-1 sm:px-3 bg-white border-t border-gray-200">
           {navItems.map((item) => (
@@ -163,6 +165,7 @@ export default function NavBar() {
               key={item.name}
               item={item}
               onClick={() => setIsMenuOpen(false)}
+              router={router}
             />
           ))}
         </div>
@@ -192,11 +195,13 @@ function NavLink({ item }) {
 }
 
 // Componente para links móviles (con efecto de click)
-function MobileNavLink({ item, onClick }) {
+function MobileNavLink({ item, onClick, router }) {
   return (
-    <Link
-      href={item.href}
-      onClick={onClick}
+    <div
+      onClick={() => {
+        onClick();
+        router(item.href);
+      }}
       className={`block px-3 py-2 rounded-md text-base font-medium transition-colors ${
         item.href === "#"
           ? "text-gray-400 cursor-not-allowed"
@@ -204,6 +209,6 @@ function MobileNavLink({ item, onClick }) {
       }`}
     >
       {item.name}
-    </Link>
+    </div>
   );
 }
